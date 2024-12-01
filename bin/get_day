@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Check if session file exists
+if [ ! -f .session ]; then
+    echo "Error: .session file not found"
+    echo "Please create a .session file with your Advent of Code session token"
+    exit 1
+fi
+
+# Check if day argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <day>"
+    exit 1
+fi
+
+# Read session token
+SESSION=$(cat .session)
+
+# Create inputs directory if it doesn't exist
+mkdir -p inputs
+
+# Fetch input for the specified day
+DAY=$1
+YEAR=2024
+
+curl --cookie "session=$SESSION" \
+     -A "github.com/knightstick/aoc2024" \
+     "https://adventofcode.com/$YEAR/day/$DAY/input" \
+     -o "inputs/day$DAY.txt"
+
+if [ $? -eq 0 ]; then
+    echo "Successfully downloaded input for day $DAY"
+else
+    echo "Failed to download input for day $DAY"
+    exit 1
+fi
