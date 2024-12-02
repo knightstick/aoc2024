@@ -53,15 +53,7 @@ pub fn part2(input: String) {
 fn parse(input: String) -> List(List(Int)) {
   input
   |> string.split(on: "\n")
-  |> list.map(fn(line) {
-    line
-    |> string.trim
-    |> string.split(on: " ")
-    |> list.map(fn(num) {
-      let assert Ok(num) = int.parse(num)
-      num
-    })
-  })
+  |> list.map(shared.numbers)
 }
 
 fn report_is_safe(report: List(Int)) -> Bool {
@@ -82,12 +74,9 @@ fn report_is_safe_desc(report: List(Int)) -> Bool {
   case report {
     [] -> True
     [_] -> True
-    [one, two, ..rest] -> {
-      one > two
-      && one - two >= 1
-      && one - two <= 3
-      && report_is_safe_desc([two, ..rest])
-    }
+    [one, two, ..rest] if one > two && one - two >= 1 && one - two <= 3 ->
+      report_is_safe_desc([two, ..rest])
+    _ -> False
   }
 }
 
@@ -95,12 +84,9 @@ fn report_is_safe_asc(report: List(Int)) -> Bool {
   case report {
     [] -> True
     [_] -> True
-    [one, two, ..rest] -> {
-      one < two
-      && two - one >= 1
-      && two - one <= 3
-      && report_is_safe_asc([two, ..rest])
-    }
+    [one, two, ..rest] if one < two && two - one >= 1 && two - one <= 3 ->
+      report_is_safe_asc([two, ..rest])
+    _ -> False
   }
 }
 
@@ -110,17 +96,12 @@ fn report_is_safeish(report: List(Int)) -> Bool {
     [_] -> True
     [one, two, ..rest] -> {
       case int.compare(one, two) {
-        order.Gt ->
-          report_is_safeish_desc(report)
-          || report_is_safe([one, ..rest])
-          || report_is_safe([two, ..rest])
-        order.Lt ->
-          report_is_safeish_asc(report)
-          || report_is_safe([one, ..rest])
-          || report_is_safe([two, ..rest])
-        order.Eq ->
-          report_is_safe([two, ..rest]) || report_is_safe([one, ..rest])
+        order.Gt -> report_is_safeish_desc(report)
+        order.Lt -> report_is_safeish_asc(report)
+        order.Eq -> False
       }
+      || report_is_safe([one, ..rest])
+      || report_is_safe([two, ..rest])
     }
   }
 }
@@ -129,13 +110,9 @@ fn report_is_safeish_desc(report: List(Int)) -> Bool {
   case report {
     [] -> True
     [_] -> True
-    [one, two, ..rest] -> {
-      one > two
-      && one - two >= 1
-      && one - two <= 3
-      && report_is_safeish_desc([two, ..rest])
-      || report_is_safe_desc([one, ..rest])
-    }
+    [one, two, ..rest] if one > two && one - two >= 1 && one - two <= 3 ->
+      report_is_safeish_desc([two, ..rest])
+    [one, _two, ..rest] -> report_is_safe_desc([one, ..rest])
   }
 }
 
@@ -143,12 +120,8 @@ fn report_is_safeish_asc(report: List(Int)) -> Bool {
   case report {
     [] -> True
     [_] -> True
-    [one, two, ..rest] -> {
-      one < two
-      && two - one >= 1
-      && two - one <= 3
-      && report_is_safeish_asc([two, ..rest])
-      || report_is_safe_asc([one, ..rest])
-    }
+    [one, two, ..rest] if one < two && two - one >= 1 && two - one <= 3 ->
+      report_is_safeish_asc([two, ..rest])
+    [one, _two, ..rest] -> report_is_safe_asc([one, ..rest])
   }
 }
