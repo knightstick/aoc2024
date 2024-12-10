@@ -21,7 +21,7 @@
       "id": "dayNumber",
       "type": "promptString",
       "description": "Which day do you want to run?",
-      "default": "3"
+      "default": "4"
     }
   ]
 }
