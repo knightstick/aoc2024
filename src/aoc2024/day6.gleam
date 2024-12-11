@@ -115,7 +115,7 @@ fn parse_tile(char: String) -> TileRead {
     ">" -> GuardTile(Right)
     "v" -> GuardTile(Down)
     "<" -> GuardTile(Left)
-    _ -> todo
+    _ -> panic
   }
 }
 
