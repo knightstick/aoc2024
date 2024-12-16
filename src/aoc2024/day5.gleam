@@ -3,8 +3,6 @@ import gleam/bool
 import gleam/int
 import gleam/io
 import gleam/list
-import gleam/option
-import gleam/result
 import gleam/string
 
 const example = "
