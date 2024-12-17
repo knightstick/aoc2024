@@ -1,6 +1,3 @@
-import aoc2024/shared
-import gleam/erlang/process
-import gleam/function
 import gleam/int
 import gleam/io
 import gleam/list
@@ -140,7 +137,6 @@ fn do_disk_process(acc: List(File), files: List(File)) {
 
           do_disk_process(acc, new_files)
         }
-        _, _, _ -> todo
       }
     }
     [move_me] -> [move_me, ..acc]
